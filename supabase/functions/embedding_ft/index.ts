@@ -4,8 +4,11 @@ import '@supabase/functions-js/edge-runtime.d.ts';
 import { z } from 'zod';
 
 // We'll make a direct Postgres connection to update the document
-import postgres from 'postgres';
 import { InvokeEndpointCommand, SageMakerRuntimeClient } from '@aws-sdk/client-sagemaker-runtime';
+import postgres from 'postgres';
+import { authenticateRequest, AuthMethod } from '../_shared/auth.ts';
+import { getRedisClient } from '../_shared/redis_client.ts';
+import { supabaseClient as supabase } from '../_shared/supabase_client.ts';
 
 const SAGEMAKER_ENDPOINT_NAME = Deno.env.get('SAGEMAKER_ENDPOINT_NAME');
 const AWS_REGION = 'us-east-1';
@@ -145,6 +148,18 @@ Deno.serve(async (req) => {
 
   if (req.headers.get('content-type') !== 'application/json') {
     return new Response('expected json body', { status: 400 });
+  }
+
+  const redis = await getRedisClient();
+
+  const authResult = await authenticateRequest(req, {
+    supabase: supabase,
+    redis: redis,
+    allowedMethods: [AuthMethod.JWT, AuthMethod.USER_API_KEY, AuthMethod.SERVICE_API_KEY],
+  });
+
+  if (!authResult.isAuthenticated) {
+    return authResult.response!;
   }
 
   // Use Zod to parse and validate the request body
@@ -351,7 +366,7 @@ async function processJob(job: Job) {
     return;
   }
 
-  console.log('generating embedding for ', row.content );
+  console.log('generating embedding for ', row.content);
 
   const embedding = await generateEmbedding(row.content);
 
