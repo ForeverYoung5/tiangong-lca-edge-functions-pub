@@ -43,18 +43,27 @@ Deno.serve(async (req) => {
     supabaseClient,
   );
   const { data: userRole } = await getUserRole(user.id!, supabaseClient);
+  const isReviewAdmin = !!userRole?.find((item: any) => item.role === 'review-admin');
 
   if (!oldDataSuccess) {
     return new Response('Data Not Found', { status: 404 });
   }
 
   if (typeof data?.state_code === 'number') {
-    const checkResult = check_state_code(oldData?.stateCode, data?.state_code);
+    const allowAdminPublishContact =
+      table === 'contacts' &&
+      isReviewAdmin &&
+      data?.state_code === 100 &&
+      (oldData?.stateCode === 0 || oldData?.stateCode === 20);
+
+    const checkResult = allowAdminPublishContact
+      ? true
+      : check_state_code(oldData?.stateCode, data?.state_code);
     if (!checkResult) {
       return new Response('State Code Not Allowed', { status: 403 });
     }
   }
-  if (!userRole?.find((item: any) => item.role === 'review-admin') && oldData?.userId !== user.id) {
+  if (!isReviewAdmin && oldData?.userId !== user.id) {
     return new Response('Forbidden', { status: 403 });
   }
 
