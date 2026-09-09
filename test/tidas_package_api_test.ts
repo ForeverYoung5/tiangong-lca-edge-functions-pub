@@ -1472,7 +1472,7 @@ Deno.test('partial import policy selects v2 and rejects unknown policies before 
         headers: { Authorization: `Bearer ${TEST_JWT}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(value),
       });
-    assertEquals((await handler(request(body))).status, 200);
+    assertEquals((await handler(request(body))).status, 202);
     assertEquals(supabase.rpcCalls[0].fn, 'svc_tidas_package_import_enqueue_v2');
     const rejected = await handler(request({ ...body, import_policy: 'unknown' }));
     assertEquals(rejected.status, 400);

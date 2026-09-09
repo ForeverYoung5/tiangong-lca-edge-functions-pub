@@ -1,7 +1,7 @@
 version: 1
 layout: repo
 lastReviewedAt: '2026-09-09'
-lastReviewedCommit: 'fa87119ed71f9fc39dbf007bb6695e69eefa1bf1'
+lastReviewedCommit: 'e82f2f09067fe01dd5eb028f1d74030295532bf0'
 lastReviewedNote: 'Edge #411: reviewed explicit root_closure_v2 enqueue policy, additive receipt readback and import_details signing; authentication and legacy default policy remain unchanged.'
 
 # Keep deterministic governance facts here.
