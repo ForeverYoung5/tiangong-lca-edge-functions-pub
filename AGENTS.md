@@ -38,9 +38,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-09-06
-lastReviewedCommit: 4e312f5b2681d4f069bdbf37293cb1e3412d1791
-lastReviewedNote: 'Reviewed for Edge #407: legacy Process/Flow RPC arguments and fallback are preserved; two Portal deadline fixtures join owned background cleanup without changing response deadlines, sanitizers or Portal runtime. Matched V2, foundation visibility, auth and deployment contracts remain unchanged.'
+lastReviewedAt: "2026-09-09"
+lastReviewedCommit: "fa87119ed71f9fc39dbf007bb6695e69eefa1bf1"
+lastReviewedNote: "Edge #411: reviewed explicit root_closure_v2 enqueue policy, additive receipt readback and import_details signing; authentication and legacy default policy remain unchanged."
 related:
   - .docpact/config.yaml
   - docs/agents/repo-validation.md

@@ -34,9 +34,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-09-06
-lastReviewedCommit: 4e312f5b2681d4f069bdbf37293cb1e3412d1791
-lastReviewedNote: 'Reviewed for Edge #407: legacy Process/Flow RPC arguments and fallback are preserved; two Portal deadline fixtures join owned background cleanup without changing response deadlines, sanitizers or Portal runtime. Matched V2, foundation visibility, auth and deployment contracts remain unchanged.'
+lastReviewedAt: "2026-09-09"
+lastReviewedCommit: "fa87119ed71f9fc39dbf007bb6695e69eefa1bf1"
+lastReviewedNote: "Edge #411: reviewed explicit root_closure_v2 enqueue policy, additive receipt readback and import_details signing; authentication and legacy default policy remain unchanged."
 related:
   - ../../AGENTS.md
   - ../../.docpact/config.yaml
@@ -308,3 +308,5 @@ If one of those changes, assume more than one function family is affected.
 ## Local Docpact Push Gate
 
 This repository has a versioned local `pre-push` hook under `.githooks/pre-push` that delegates to `scripts/docpact-gate.sh` and then runs non-mutating `pnpm lint` plus canonical `pnpm check`. The hook aborts if the lint step changes the working tree, so generated formatting changes must be reviewed and committed before push. The gate resolves the CLI through `scripts/docpact`, so local agent shells do not need bare `docpact` on `PATH`. The hook is the local guard for docpact config validation, enforced doc-governance linting, and the complete Edge Function type/behavior gate; the GitHub `CI` workflow is manual-dispatch only.
+
+Package enqueue accepts optional `import_policy=root_closure_v2`, dispatches it to `svc_tidas_package_import_enqueue_v2`, and rejects unknown policies before RPC. Omission keeps legacy enqueue. Status reads use owner-scoped `svc_tidas_package_read_v2`; `import_progress` contains committed receipt counts. `import_details` uses the existing artifact lifecycle/signing path; Edge performs no dataset validation.
